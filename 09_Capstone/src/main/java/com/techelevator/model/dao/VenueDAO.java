@@ -8,5 +8,5 @@ public interface VenueDAO {
 	
 	public List<Venue>getAllVenues();
 
-
+	public List<Venue> getVenueDetails();
 }
