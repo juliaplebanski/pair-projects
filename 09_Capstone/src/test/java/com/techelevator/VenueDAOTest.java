@@ -2,7 +2,7 @@ package com.techelevator;
 
 import org.junit.Test;
 
-public class MyDAOTest extends DAOIntegrationTest {
+public class VenueDAOTest extends DAOIntegrationTest {
 	
 	
 	// RENAME, REUSE, OR DELETE ME... THIS IS A PLACEHOLDER ONLY SHOWING HOW YOU CAN 
