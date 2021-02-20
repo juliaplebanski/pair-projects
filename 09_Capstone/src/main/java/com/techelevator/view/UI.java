@@ -13,7 +13,17 @@ public class UI {
 	public UI(InputStream input, PrintStream output) {
 		this.out = new PrintWriter(output);
 		this.in = new Scanner(input);
+		
+			
 	}
+	
+	public void printFirstMenu() {
+		System.out.println("What would you like to do?");
+	
+		
+		
+	}
+	
 
 	public Object getChoiceFromOptions(Object[] options) {
 		Object choice = null;

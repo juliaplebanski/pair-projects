@@ -32,10 +32,10 @@ import com.techelevator.model.domain.VenueSpace;
 
 		
         
-		@Override
+		@Override // come back to this at the end 
 		public List<VenueSpace> getAvaliableVenueSpacesByDate(long id, LocalDate startDate, LocalDate endDate) {
 			List<VenueSpace> venueSpace = new ArrayList<>();
-			String selectSQL = "SELECT venue_id, max_occupancy, is_accessible, daily_rate FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id not in(SELECT space.id from reservation where (?, ?) overlaps (start_date, end_date) group by space.id) limit 5";
+			String selectSQL = "SELECT venue_id, max_occupancy, is_accessible, daily_rate::numeric:: FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id not in(SELECT space.id FROM reservation WHERE (?, ?) overlaps (start_date, end_date) group by space.id) LIMIT 5";
 			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, id, startDate, endDate.plusDays(1));
 
 			while(results.next()) {

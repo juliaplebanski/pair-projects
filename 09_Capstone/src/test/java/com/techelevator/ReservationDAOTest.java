@@ -46,11 +46,13 @@ public class ReservationDAOTest extends DAOIntegrationTest {
 		assertReservationAreEqual(reservation, createdReservation);
 	
 	}
+	@Test
 	public void test_getAvaliableVenueSpacesByDate() {
 		List<VenueSpace> results = dao.getAvaliableVenueSpacesByDate(1, LocalDate.of(2021, 06, 21), LocalDate.of(2021, 06, 30));
 		assertNotNull(results);
 		assertTrue(results.size() >= 1);
 	}
+	@Test
 	public void test_get_Reservation_by_id() {
 		Reservation reservation = dao.getByReservationID(TEST_ID);
 		assertNotNull(reservation );

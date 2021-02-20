@@ -39,10 +39,20 @@ public class ExcelsiorCLI {
  		this.reservationDAO = new JDBCReservationDAO(dataSource);
  		
  	}
-
+// Reminder: No System.out.printlns in this class
 	public void run() {
+		boolean running = true;
 		
-		// Reminder: No System.out.printlns in this class
+		while(running) {
+			ui.printFirstMenu();
+			String choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
+			
+			if (choice.equals(LIST_VENUES)) {
+				
+			
+			
+		}
+		
 		
 
 	}
