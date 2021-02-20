@@ -35,7 +35,9 @@ import com.techelevator.model.domain.VenueSpace;
 		@Override // come back to this at the end 
 		public List<VenueSpace> getAvaliableVenueSpacesByDate(long id, LocalDate startDate, LocalDate endDate) {
 			List<VenueSpace> venueSpace = new ArrayList<>();
-			String selectSQL = "SELECT venue_id, max_occupancy, is_accessible, daily_rate::numeric:: FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id not in(SELECT space.id FROM reservation WHERE (?, ?) overlaps (start_date, end_date) group by space.id) LIMIT 5";
+			String selectSQL = "SELECT venue_id, space.id, space.open_from, space.open_to, space.name, max_occupancy, is_accessible, CAST(space.daily_rate AS decimal) "
+					+ "FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id "
+					+ "not in(SELECT space.id FROM reservation WHERE (?, ?) overlaps (start_date, end_date) group by space.id) LIMIT 5";
 			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, id, startDate, endDate.plusDays(1));
 
 			while(results.next()) {
@@ -105,7 +107,7 @@ import com.techelevator.model.domain.VenueSpace;
 			venueSpace.setClosed(results.getString("open_to"));
 			venueSpace.setName(results.getString("name"));
 			venueSpace.setAccessible(results.getBoolean("is_accessible"));
-			venueSpace.setDaily_rate(results.getInt("daily_rate"));
+			venueSpace.setDaily_rate(results.getDouble("daily_rate"));
 			venueSpace.setMaxOccupancy(results.getLong("max_occupancy"));
 			
 			return venueSpace;

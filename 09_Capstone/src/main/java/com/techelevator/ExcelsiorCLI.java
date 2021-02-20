@@ -48,38 +48,43 @@ public class ExcelsiorCLI {
 	public void run() {
 		boolean running = true;
 		while (running) {
-			ui.printFirstMenu();
+			ui.printHeader("What would you like to do?");
 			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
 
-			if(Choice.equals(one)) {
-				handleListOfVenues();	
-			}
-			else if (Choice.equals(two)) {
-				System.out.println("Have A Great Day!");
-					System.exit(0);
-			}
-			else {
+			if (Choice.equals(one)) {
+				handleListOfVenues();
+				ui.printHeader("Which venue would you like to view?");
+				
+				List<Venue> venueList = venueDAO.getAllVenues();
+				Object[] venueArray = new Object[venueList.size()];
+				venueList.toArray(venueArray);
+				Object subChoice1 = ui.getChoiceFromUserInput(venueArray);
+				handleVenueDetails();
+				
+			} else if (Choice.equals(two)) {
+				ui.exitMessage();
+				System.exit(0);
+			} else {
 				ui.handleError();
 			}
-			
-				
-			
-		}
-				
 
+		}
 
 	}
 
 	public List<Venue> handleListOfVenues() {
 		List<Venue> venueList = venueDAO.getAllVenues();
-		if(venueList.size() > 0) {
-			for(Venue venue : venueList) {
-				System.out.println(venue.getName());
-			}
-		} else {
-			System.out.println("\n*** No results ***");
-		}
+		ui.selectListOfVenues(venueList);
 		return venueList;
 	}
+
+	public List<Venue> handleVenueDetails() {
+		List<Venue> venueDetails = venueDAO.getVenueDetails();
+		
+		ui.selectVenueDetails(venueDetails);
+		return venueDetails;
+		
+	}
+	
 
 }
