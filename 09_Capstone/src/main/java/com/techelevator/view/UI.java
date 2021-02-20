@@ -42,11 +42,12 @@ public class UI {
 				choice = options[selectedOption - 1];
 			}
 		} catch(NumberFormatException e) {
-			// eat the exception, an error message will be displayed below since choice will be null
+			handleError();
 		}
 		if(choice == null) {
-			out.println("\n*** "+userInput+" option is invalid ***\n");
+			out.println("\n***Please select a valid option ***\n");
 		}
+		
 		return choice;
 	}
 
@@ -58,6 +59,11 @@ public class UI {
 		}
 		out.print("\n Please choose an option >>> ");
 		out.flush();
+	}
+	public void handleError() {
+		
+		out.println("\n** option is invalid ***\n");
+		
 	}
 
 }
