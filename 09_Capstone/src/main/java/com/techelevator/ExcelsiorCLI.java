@@ -13,9 +13,9 @@ import com.techelevator.model.domain.Venue;
 import com.techelevator.view.UI;
 
 public class ExcelsiorCLI {
-	private static final String LIST_VENUES = "1";
-	private static final String QUIT = "2";
-	private static final String[] MAIN_MENU_OPTION_ARRAY = new String[] { LIST_VENUES, QUIT };
+	private static final String one = "List Venues";
+	private static final String two = "Quit";
+	private static final String[] MAIN_MENU_OPTION_ARRAY = new String[] { one, two };
 
 	private static final String SUB_MENU_OPTION_VIEW_VENUES = "View venues";
 	private static final String SUB_MENU_OPTION_RETURN_TO_MAIN = "Return to main menu";
@@ -42,26 +42,38 @@ public class ExcelsiorCLI {
  		this.reservationDAO = new JDBCReservationDAO(dataSource);
  		
  	}
-// Reminder: No System.out.printlns in this class
+
 	public void run() {
 		boolean running = true;
 		while(running) {
 			ui.printFirstMenu();
 			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
-			if(Choice == LIST_VENUES) {
-				handleListOfVenues();
-				
+			if(Choice.equals(one)) {
+				handleListOfVenues();	
+			}
+			else if (Choice.equals(two)) {
+					System.exit(0);
 			}
 				
 			
-			
 		}
-		
+			
+				
+			
+			
+	
 		
 
 	}
 	public List<Venue> handleListOfVenues(){
 		List<Venue> venueList = venueDAO.getAllVenues();
+		if(venueList.size() > 0) {
+			for(Venue venue : venueList) {
+				System.out.println(venue.getName());
+			}
+		} else {
+			System.out.println("\n*** No results ***");
+		}
 		return venueList;
 	}
 	
