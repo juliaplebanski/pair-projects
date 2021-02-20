@@ -13,9 +13,9 @@ import com.techelevator.model.domain.Venue;
 import com.techelevator.view.UI;
 
 public class ExcelsiorCLI {
-	private static final String LIST_VENUES = "1";
-	private static final String QUIT = "2";
-	private static final String[] MAIN_MENU_OPTION_ARRAY = new String[] { LIST_VENUES, QUIT };
+	private static final String one = "List Venues";
+	private static final String two = "Quit";
+	private static final String[] MAIN_MENU_OPTION_ARRAY = new String[] { one, two };
 
 	private static final String SUB_MENU_OPTION_VIEW_VENUES = "View venues";
 	private static final String SUB_MENU_OPTION_RETURN_TO_MAIN = "Return to main menu";
@@ -37,6 +37,7 @@ public class ExcelsiorCLI {
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
+<<<<<<< HEAD
 		this.venueDAO = new JDBCVenueDAO(dataSource);
 		this.venueSpaceDAO = new JDBCVenueSpaceDAO(dataSource);
 		this.reservationDAO = new JDBCReservationDAO(dataSource);
@@ -44,22 +45,55 @@ public class ExcelsiorCLI {
 	}
 
 // Reminder: No System.out.printlns in this class
+=======
+ 		this.venueDAO = new JDBCVenueDAO(dataSource);
+ 		this.venueSpaceDAO = new JDBCVenueSpaceDAO(dataSource);
+ 		this.reservationDAO = new JDBCReservationDAO(dataSource);
+ 		
+ 	}
+
+>>>>>>> cf18ad1f3302910b8fd20b0dec29ea4c3cb1c033
 	public void run() {
 		boolean running = true;
 		while (running) {
 			ui.printFirstMenu();
 			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
+<<<<<<< HEAD
 			if (Choice == LIST_VENUES) {
 				handleListOfVenues();
 
 			}
 
 		}
+=======
+			if(Choice.equals(one)) {
+				handleListOfVenues();	
+			}
+			else if (Choice.equals(two)) {
+					System.exit(0);
+			}
+				
+			
+		}
+			
+				
+			
+			
+	
+		
+>>>>>>> cf18ad1f3302910b8fd20b0dec29ea4c3cb1c033
 
 	}
 
 	public List<Venue> handleListOfVenues() {
 		List<Venue> venueList = venueDAO.getAllVenues();
+		if(venueList.size() > 0) {
+			for(Venue venue : venueList) {
+				System.out.println(venue.getName());
+			}
+		} else {
+			System.out.println("\n*** No results ***");
+		}
 		return venueList;
 	}
 
