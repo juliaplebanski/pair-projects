@@ -17,7 +17,7 @@ public class VenueDAOTest extends DAOIntegrationTest {
 
 	
 	
-	private final long TEST_ID = 4000;
+	private static final long TEST_ID = 4000;
 	private JDBCVenueDAO dao;
 
 
@@ -34,8 +34,6 @@ public class VenueDAOTest extends DAOIntegrationTest {
 	@Test
 	public void return_list_of_venues() {
 		List<Venue> results = dao.getAllVenues();
-		
-		
 		assertNotNull(results);
 		assertTrue(results.size() >= 1);
 	}

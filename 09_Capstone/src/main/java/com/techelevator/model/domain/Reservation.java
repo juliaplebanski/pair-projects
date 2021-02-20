@@ -1,6 +1,8 @@
 package com.techelevator.model.domain;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Calendar;
 
 
 public class Reservation {
@@ -8,8 +10,8 @@ public class Reservation {
 	private long reservationID;
 	private String name;
 	private long spaceID;
-	private Date startDate;
-	private Date endDate;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	private int numOfAttendees;
 	
 	
@@ -37,17 +39,17 @@ public class Reservation {
 	public void setSpaceID(long spaceID) {
 		this.spaceID = spaceID;
 	}
-	public Date getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartDate(LocalDate start_date) {
+		this.startDate = start_date;
 	}
-	public Date getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date date) {
-		this.endDate = date;
+	public void setEndDate(LocalDate end_date) {
+		this.endDate = end_date;
 	}
 	
 	

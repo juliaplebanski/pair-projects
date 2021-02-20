@@ -1,6 +1,7 @@
 package com.techelevator.model.JDBC;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -23,7 +24,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 	public List<VenueSpace> getAllSpaces() {
 		// TODO Auto-generated method stub
 		List<VenueSpace>listOfSpaces = new ArrayList<VenueSpace>();
-		String selectStatement = "SELECT * FROM space";
+		String selectStatement = "SELECT venue_id,id, name, is_accessible, open_from, open_to, daily_rate::numeric::integer, max_occupancy FROM space";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectStatement);
 		while(results.next()) {
 			VenueSpace venueSpace = mapRowToVenueSpace(results);
@@ -35,7 +36,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 	@Override
 	public VenueSpace getVenueSpacebyID(long ID) {
 		VenueSpace venueSpace = null;
-		String selectSql = "SELECT * FROM space WHERE venue_id = ?";
+		String selectSql = "SELECT venue_id, id, name, is_accessible, open_from, open_to, daily_rate::numeric::integer, max_occupancy FROM space WHERE id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSql, ID);
 		while(results.next()) {
 			venueSpace = mapRowToVenueSpace(results);
@@ -52,7 +53,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 		venueSpace.setClosed(results.getString("open_to"));
 		venueSpace.setName(results.getString("name"));
 		venueSpace.setAccessible(results.getBoolean("is_accessible"));
-		venueSpace.setDaily_rate(results.getDouble("daily_rate"));
+		venueSpace.setDaily_rate(results.getInt("daily_rate"));
 		venueSpace.setMaxOccupancy(results.getLong("max_occupancy"));
 		
 		return venueSpace;

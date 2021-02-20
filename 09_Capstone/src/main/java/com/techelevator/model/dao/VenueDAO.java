@@ -6,7 +6,6 @@ import com.techelevator.model.domain.Venue;
 
 public interface VenueDAO {
 	
-	public List<Venue>getAllVenues();
-
-	public List<Venue> getVenueDetails();
+	List<Venue>getAllVenues();
+    List<Venue> getVenueDetails();
 }

@@ -4,7 +4,7 @@ public class VenueSpace {
 	
 	private long spaceID;
 	private long venueID;
-	private double daily_rate;
+	private int daily_rate;
 	private String open;
 	private String closed;
 	private boolean isAccessible;
@@ -22,10 +22,10 @@ public class VenueSpace {
 	public void setVenueID(long venueID) {
 		this.venueID = venueID;
 	}
-	public double getDaily_rate() {
+	public int getDaily_rate() {
 		return daily_rate;
 	}
-	public void setDaily_rate(double daily_rate) {
+	public void setDaily_rate(int daily_rate) {
 		this.daily_rate = daily_rate;
 	}
 	public String getOpen() {

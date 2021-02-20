@@ -1,10 +1,13 @@
 package com.techelevator.model.JDBC;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,51 +16,48 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.model.dao.ReservationDAO;
 
 import com.techelevator.model.domain.Reservation;
+import com.techelevator.model.domain.VenueSpace;
 
-
-public class JDBCReservationDAO {
-
-	public class JDBCReservationAO implements ReservationDAO {
+	
+	public class JDBCReservationDAO implements ReservationDAO {
 
 		private JdbcTemplate jdbcTemplate;
+		
+		
 
-		public void JDBCReservationDAO(DataSource dataSource) {
+		public JDBCReservationDAO(DataSource dataSource) {
+			
 			this.jdbcTemplate = new JdbcTemplate(dataSource);
 		}
 
+		
+        
 		@Override
-		public List<Reservation> getAllReservations() {
+		public List<VenueSpace> getAvaliableVenueSpacesByDate(long id, LocalDate startDate, LocalDate endDate) {
+			List<VenueSpace> venueSpace = new ArrayList<>();
+			String selectSQL = "SELECT venue_id, max_occupancy, is_accessible, daily_rate FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id not in(SELECT space.id from reservation where (?, ?) overlaps (start_date, end_date) group by space.id) limit 5";
+			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, id, startDate, endDate.plusDays(1));
 
-			List<Reservation> reservationList = new ArrayList<Reservation>();
-			String selectSQL = "SELECT * FROM reservation";
-			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL);
-			while (results.next()) {
-				Reservation reservation = mapRowToReservation(results);
-				reservationList.add(reservation);
-
+			while(results.next()) {
+				venueSpace.add(mapRowToVenueSpace(results));
 			}
-			return reservationList;
-
-		}
-		
-        /**This is going to be a fun SQL statement so save for last.*/
-		@Override
-		public List<Reservation> getAvailiableReservations(Date startDate, Date endDate, long spaceID) {
-			// TODO Auto-generated method stub
-			return null;
+			return venueSpace;
 		}
 		
 		@Override
-		public void createReservation(Reservation reservation) {
+		public Reservation createReservation(Reservation reservation) {
 		
-			String insertSql = "INSERT INTO reservation(space_id, number_of_attendees, start_date, end_date, reserved_for) VALUES(?, ?, ?, ?, ?)";
-			jdbcTemplate.update(insertSql, reservation.getSpaceID(), reservation.getStartDate(),reservation.getEndDate(),reservation.getName(), reservation.getNumOfAttendees());
+			String insertSql = "INSERT INTO reservation(space_id, number_of_attendees, start_date, end_date, reserved_for)"
+					+ " VALUES(?,?,?,?,?)";
+			reservation.setReservationID(getNextReservationID());
+			jdbcTemplate.update(insertSql, reservation.getSpaceID(),reservation.getNumOfAttendees(), reservation.getStartDate(),reservation.getEndDate(), reservation.getName());
+		  return reservation;
 		}
 
 		
 		/**This method searches for a reservation for a reservation by reservationID.*/	
 		@Override
-		public Reservation getReservation(long reservationID) {
+		public Reservation getByReservationID(long reservationID) {
 			Reservation reservation = null;
 			String selectSql = "SELECT * FROM reservation WHERE reservation_id = ?";
 			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSql, reservationID);
@@ -66,18 +66,66 @@ public class JDBCReservationDAO {
 			}
 			return reservation;
 		}
+		
+		@Override
+		public List<Reservation> getAllReservations() {
+			List<Reservation> reservationList = new ArrayList<Reservation>();
+			String selectSQL = "SELECT * FROM reservation";
+			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL);
+			while (results.next()) {
+				Reservation reservation = mapRowToReservation(results);
+				reservationList.add(reservation);
+			}
+			return reservationList;
 			
+		}
+		public long getNextReservationID() {
+			SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT nextval('reservation_reservation_id_seq')");
+			if(results.next()) {
+				long id = results.getLong(1); //get the id at index 1
+				return id;
+			}
+			else {
+				throw new RuntimeErrorException(null, "Unable to retrieve reservation id!");
+			}
+			
+		}
+		@Override
+		public void saveReservation(Reservation newReservation) 
+		{
+			String sqlNewReservation = "UPDATE reservation SET reserved_for = ? WHERE reservation_id = ?";
+			jdbcTemplate.update(sqlNewReservation, newReservation.getName(), newReservation.getReservationID());
+		}
+	
+		private VenueSpace mapRowToVenueSpace(SqlRowSet results) {
+			VenueSpace venueSpace = new VenueSpace();
+			venueSpace.setSpaceID(results.getLong("id"));
+			venueSpace.setVenueID(results.getLong("venue_id"));
+			venueSpace.setOpen(results.getString("open_from"));
+			venueSpace.setClosed(results.getString("open_to"));
+			venueSpace.setName(results.getString("name"));
+			venueSpace.setAccessible(results.getBoolean("is_accessible"));
+			venueSpace.setDaily_rate(results.getInt("daily_rate"));
+			venueSpace.setMaxOccupancy(results.getLong("max_occupancy"));
+			
+			return venueSpace;
+			
+		}
 
-	private Reservation mapRowToReservation(SqlRowSet results) {
-		Reservation reservation = new Reservation();
-		reservation.setEndDate(results.getDate("start_date"));
-		reservation.setName(results.getString("name"));
-		reservation.setReservationID(results.getLong("reservation_id"));
-		reservation.setSpaceID(results.getLong("space_id"));
-		reservation.setStartDate(results.getDate("end_date"));
+		private Reservation mapRowToReservation(SqlRowSet results) {
+			Reservation reservation = new Reservation();
+			reservation.setStartDate(results.getDate("start_date").toLocalDate());
+			reservation.setEndDate(results.getDate("end_date").toLocalDate());
+			reservation.setName(results.getString("reserved_for"));
+			reservation.setReservationID(results.getLong("reservation_id"));
+			reservation.setSpaceID(results.getLong("space_id"));
+			return reservation;
+		}
 
-		return reservation;
-	}
 
-}
+
+		
+
+	
+	
 }	
