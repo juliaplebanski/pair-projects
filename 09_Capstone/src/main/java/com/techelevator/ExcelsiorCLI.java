@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.util.List;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import com.techelevator.model.JDBC.JDBCReservationDAO;
 import com.techelevator.model.JDBC.JDBCVenueDAO;
@@ -7,6 +9,7 @@ import com.techelevator.model.JDBC.JDBCVenueSpaceDAO;
 import com.techelevator.model.dao.ReservationDAO;
 import com.techelevator.model.dao.VenueDAO;
 import com.techelevator.model.dao.VenueSpaceDAO;
+import com.techelevator.model.domain.Venue;
 import com.techelevator.view.UI;
 
 public class ExcelsiorCLI {
@@ -42,12 +45,13 @@ public class ExcelsiorCLI {
 // Reminder: No System.out.printlns in this class
 	public void run() {
 		boolean running = true;
-		
 		while(running) {
 			ui.printFirstMenu();
-			String choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
-			
-			if (choice.equals(LIST_VENUES)) {
+			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
+			if(Choice == LIST_VENUES) {
+				handleListOfVenues();
+				
+			}
 				
 			
 			
@@ -56,4 +60,9 @@ public class ExcelsiorCLI {
 		
 
 	}
+	public List<Venue> handleListOfVenues(){
+		List<Venue> venueList = venueDAO.getAllVenues();
+		return venueList;
+	}
+	
 }
