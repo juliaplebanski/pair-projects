@@ -20,11 +20,11 @@ public class ExcelsiorCLI {
 	private static final String SUB_MENU_OPTION_VIEW_VENUES = "View venues";
 	private static final String SUB_MENU_OPTION_RETURN_TO_MAIN = "Return to main menu";
 	private static final String SUB_MENU_OPTION_VENUE_DETAILS = "View venue Details";
-			
+
 	private UI ui;
- 	private VenueDAO venueDAO;
- 	private ReservationDAO reservationDAO;
- 	private VenueSpaceDAO venueSpaceDAO;
+	private VenueDAO venueDAO;
+	private ReservationDAO reservationDAO;
+	private VenueSpaceDAO venueSpaceDAO;
 
 	public static void main(String[] args) {
 		ExcelsiorCLI application = new ExcelsiorCLI();
@@ -32,22 +32,25 @@ public class ExcelsiorCLI {
 	}
 
 	public ExcelsiorCLI() {
- 		this.ui = new UI(System.in, System.out);
- 		BasicDataSource dataSource = new BasicDataSource();
+		this.ui = new UI(System.in, System.out);
+		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
- 		this.venueDAO = new JDBCVenueDAO(dataSource);
- 		this.venueSpaceDAO = new JDBCVenueSpaceDAO(dataSource);
- 		this.reservationDAO = new JDBCReservationDAO(dataSource);
- 		
- 	}
+		this.venueDAO = new JDBCVenueDAO(dataSource);
+		this.venueSpaceDAO = new JDBCVenueSpaceDAO(dataSource);
+		this.reservationDAO = new JDBCReservationDAO(dataSource);
+
+	}
+
+// Reminder: No System.out.printlns in this class
 
 	public void run() {
 		boolean running = true;
-		while(running) {
+		while (running) {
 			ui.printFirstMenu();
 			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
+
 			if(Choice.equals(one)) {
 				handleListOfVenues();	
 			}
@@ -64,8 +67,10 @@ public class ExcelsiorCLI {
 		}
 				
 
+
 	}
-	public List<Venue> handleListOfVenues(){
+
+	public List<Venue> handleListOfVenues() {
 		List<Venue> venueList = venueDAO.getAllVenues();
 		if(venueList.size() > 0) {
 			for(Venue venue : venueList) {
@@ -76,6 +81,5 @@ public class ExcelsiorCLI {
 		}
 		return venueList;
 	}
-	
-	
+
 }
