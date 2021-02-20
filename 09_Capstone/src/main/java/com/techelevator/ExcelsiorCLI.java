@@ -54,15 +54,14 @@ public class ExcelsiorCLI {
 			else if (Choice.equals(two)) {
 					System.exit(0);
 			}
+			else {
+				ui.handleError();
+			}
+			
 				
 			
 		}
-			
 				
-			
-			
-	
-		
 
 	}
 	public List<Venue> handleListOfVenues(){
@@ -76,5 +75,6 @@ public class ExcelsiorCLI {
 		}
 		return venueList;
 	}
+	
 	
 }
