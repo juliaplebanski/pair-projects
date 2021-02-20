@@ -52,6 +52,7 @@ public class ExcelsiorCLI {
 				handleListOfVenues();	
 			}
 			else if (Choice.equals(two)) {
+				System.out.println("Have A Great Day!");
 					System.exit(0);
 			}
 			else {
