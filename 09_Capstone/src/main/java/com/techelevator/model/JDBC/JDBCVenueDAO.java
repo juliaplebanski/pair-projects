@@ -25,7 +25,7 @@ public class JDBCVenueDAO implements VenueDAO {
 	
 	public List<Venue> getAllVenues() {
 		List<Venue> venueList = new ArrayList<Venue>();
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, city.id AS cityID, (category.name) AS categories FROM venue\n" + 
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, city.id AS city_id, (category.name) AS categories FROM venue\n" + 
 				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
 				"JOIN category ON category_venue.category_id = category.id\n" + 
 				"JOIN city ON venue.city_id = city.id\n" + 
@@ -55,7 +55,7 @@ public class JDBCVenueDAO implements VenueDAO {
 	public List<Venue> getVenueDetails(long venueID) {
 		List<Venue> venueDetails = new ArrayList<Venue>();
 		//checkIfCategoryIsNull("categories"); // need to call the method from above to check if the categories are null
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS cityID, (category.name) AS categories FROM venue\n" + 
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n" + 
 				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
 				"JOIN category ON category_venue.category_id = category.id\n" + 
 				"JOIN city ON venue.city_id = city.id\n" + 
@@ -74,7 +74,7 @@ public class JDBCVenueDAO implements VenueDAO {
 		venue.setCategory(results.getString("categories")); 
 		venue.setDescription(results.getString("description"));
 		venue.setVenueID((long) results.getInt("id"));
-		venue.setCityID(results.getLong("cityID"));
+		venue.setCityID(results.getLong("city_id"));
 		venue.setLocation(results.getString("location_id"));// and state of venue
 		venue.setName(results.getString("name"));
 
@@ -86,6 +86,31 @@ public class JDBCVenueDAO implements VenueDAO {
 		String insertSql = "INSERT INTO venue(id, name, city_id, description) VALUES(?, ?, ?, ?, ?)";
 		jdbcTemplate.update(insertSql, venue.getVenueID(), venue.getName(), venue.getCityID(), venue.getDescription());
 
+	}
+
+
+	@Override
+	public Venue getVenueNameByID(Long selectedVenueID) {
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n" + 
+				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
+				"JOIN category ON category_venue.category_id = category.id\n" + 
+				"JOIN city ON venue.city_id = city.id\n" + 
+				"WHERE venue.id = ?";
+				
+		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, selectedVenueID);
+		if (results.next()){
+			Venue venue = new Venue();
+			venue = mapRowToVenue(results);
+		}
+		
+	
+		
+		return venue;
+			
+			
+			
+		
+			
 	}
 
 

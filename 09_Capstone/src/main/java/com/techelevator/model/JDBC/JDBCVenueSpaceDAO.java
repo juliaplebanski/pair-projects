@@ -43,6 +43,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 		}
 		return venueSpace;
 	}
+	
 		
 	//used to map the results row to properties of the venueSpace class
 	private VenueSpace mapRowToVenueSpace(SqlRowSet results) {

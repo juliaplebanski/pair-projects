@@ -1,6 +1,7 @@
 package com.techelevator.view;
 
 import java.io.InputStream;
+
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -35,7 +36,7 @@ public class UI {
 
 	//used for each header that prints out to our console
 	public void printHeader(String headerInformation) {
-		out.println(headerInformation);
+		System.out.println(headerInformation);
 
 	}
 	public void printReservationHeader() {
@@ -135,7 +136,7 @@ public class UI {
 	}
 
 	//prints out venue details
-	public void selectVenueDetails(List<Venue> venueDetails) {
+	public void printVenueDetails(List<Venue> venueDetails) {
 		if (venueDetails.size() > 0) {
 			for (int i = 0; i < venueDetails.size(); i++) {
 				System.out.println("Name: " + venueDetails.get(i).getName());
@@ -145,6 +146,7 @@ public class UI {
 			}
 		}
 	}
+	/**This method prints out a message to the console and also retrieves input from the user.*/
 	public String getInputFromUser(String message) { 
 		String input = "";
 		while (input.isEmpty()) {
@@ -176,7 +178,7 @@ public class UI {
 	}
 
 	//method to print out the confirmation message when the reservation is complete
-	public void confirmationMessage() {
+	public void printConfirmationMessage(Reservation reservation, Venue venue, VenueSpace venueSpace) {
 		out.println("Thanks for submitting your reservation! The details for your event are listed below:");
 		out.println("Confirmation #: " + reservation.getReservationID());
 		out.println("Venue: " + venue.getName());
