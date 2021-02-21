@@ -31,8 +31,8 @@ import com.techelevator.model.domain.VenueSpace;
 		}
 
 		
-        
-		@Override // come back to this at the end 
+        //used to get the first 5 available venue spaces by date
+		@Override 
 		public List<VenueSpace> getAvaliableVenueSpacesByDate(long id, LocalDate startDate, LocalDate endDate) {
 			List<VenueSpace> venueSpace = new ArrayList<>();
 			String selectSQL = "SELECT venue_id, space.id, space.open_from, space.open_to, space.name, max_occupancy, is_accessible, CAST(space.daily_rate AS decimal) "
@@ -46,6 +46,7 @@ import com.techelevator.model.domain.VenueSpace;
 			return venueSpace;
 		}
 		
+		//used to create a reservation
 		@Override
 		public Reservation createReservation(Reservation reservation) {
 		
@@ -57,7 +58,7 @@ import com.techelevator.model.domain.VenueSpace;
 		}
 
 		
-		/**This method searches for a reservation for a reservation by reservationID.*/	
+		//used to search for a reservation for a reservation by reservationID	
 		@Override
 		public Reservation getByReservationID(long reservationID) {
 			Reservation reservation = null;
@@ -69,6 +70,7 @@ import com.techelevator.model.domain.VenueSpace;
 			return reservation;
 		}
 		
+		//used to get a list of all of the reservations
 		@Override
 		public List<Reservation> getAllReservations() {
 			List<Reservation> reservationList = new ArrayList<Reservation>();
@@ -81,6 +83,8 @@ import com.techelevator.model.domain.VenueSpace;
 			return reservationList;
 			
 		}
+		
+		//used to get the next reservationId
 		public long getNextReservationID() {
 			SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT nextval('reservation_reservation_id_seq')");
 			if(results.next()) {
@@ -92,13 +96,16 @@ import com.techelevator.model.domain.VenueSpace;
 			}
 			
 		}
+		
+		//used to save a servation
 		@Override
 		public void saveReservation(Reservation newReservation) 
 		{
 			String sqlNewReservation = "UPDATE reservation SET reserved_for = ? WHERE reservation_id = ?";
 			jdbcTemplate.update(sqlNewReservation, newReservation.getName(), newReservation.getReservationID());
 		}
-	
+		
+		//used to map the results row to properties of the venueSpace class
 		private VenueSpace mapRowToVenueSpace(SqlRowSet results) {
 			VenueSpace venueSpace = new VenueSpace();
 			venueSpace.setSpaceID(results.getLong("id"));
@@ -113,7 +120,7 @@ import com.techelevator.model.domain.VenueSpace;
 			return venueSpace;
 			
 		}
-
+		//used to map the results row to properties of the Reservation class
 		private Reservation mapRowToReservation(SqlRowSet results) {
 			Reservation reservation = new Reservation();
 			reservation.setStartDate(results.getDate("start_date").toLocalDate());

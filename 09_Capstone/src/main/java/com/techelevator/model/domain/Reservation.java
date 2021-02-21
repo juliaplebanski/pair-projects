@@ -13,8 +13,15 @@ public class Reservation {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private int numOfAttendees;
+	private int lengthOfStay;
 	
 	
+	public int getLengthOfStay() {
+		return lengthOfStay;
+	}
+	public void setLengthOfStay(int lengthOfStay) {
+		this.lengthOfStay = lengthOfStay;
+	}
 	public int getNumOfAttendees() {
 		return numOfAttendees;
 	}

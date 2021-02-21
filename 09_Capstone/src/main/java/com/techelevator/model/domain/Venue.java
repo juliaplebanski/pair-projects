@@ -59,8 +59,8 @@ public class Venue {
 
 	public void setCityID(long cityID) {
 		this.cityID = cityID;
+
 	}
-	
 
 	// May need a toString method later.
 
