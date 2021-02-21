@@ -105,9 +105,11 @@ public class ExcelsiorCLI {
 			if (Choice.equals(SUB_MENU_OPTION_ONE)) {
 				handleSpaces();
 			}
-			//else if( {
-				//TO DO: write logic to search for reservation.
-			//}
+			else if(Choice.equals(SUB_MENU_OPTION_TWO)) {
+				Long ChoiceForSubMenu2 = Long.parseLong(ui.getInputFromUser("Provide the reservation ID"));
+				handleSearchReservation(ChoiceForSubMenu2);
+				
+			}
 			else {
 				isRunning = false;
 			}
@@ -117,6 +119,12 @@ public class ExcelsiorCLI {
 		}
 		
 	}
+	private Reservation handleSearchReservation(long reservationID) {
+		Reservation reservation = reservationDAO.getByReservationID(reservationID);
+		ui.printReservationByID(reservation);
+		return reservation;
+	}
+
 	/**This method handles Venue spaces.*/
 	private void handleSpaces() {
 		List<VenueSpace>listOfVenueSpaces = venueSpaceDAO.getAllSpaces();
@@ -139,13 +147,12 @@ public class ExcelsiorCLI {
 		Long selectedVenueID = Long.parseLong(ui.getInputFromUser("Please provide the venue ID of the venue"
 				+ "."));
 		Venue selectedVenueName = venueDAO.getVenueNameByID(selectedVenueID);
-		System.out.println(selectedVenueName);
-		String finalselectedVenueName = selectedVenueName.toString();
+		String finalselectedVenueName = selectedVenueName.getName();
 		
 		int numOfAttendees = Integer.parseInt(ui.getInputFromUser("How many people would be attending?"));
-		Long LengthOfStay = Long.parseLong(ui.getInputFromUser("How many days will you need the space?"));
+		Long lengthOfStay = Long.parseLong(ui.getInputFromUser("How many days will you need the space?"));
 		LocalDate startDate = ui.getDateFromUser("When do you need the space? (MM/DD/YYYY)");
-		LocalDate endDate =  startDate.plusDays(LengthOfStay);
+		LocalDate endDate =  startDate.plusDays(lengthOfStay);
 		long diff = ChronoUnit.DAYS.between(startDate, endDate);
 		if (diff < 1)
 		{
@@ -164,31 +171,32 @@ public class ExcelsiorCLI {
 				ui.printListOfAvaliableSpaces(avaliableSpaceList);
 				Long selectedSpaceID = Long.parseLong(ui.getInputFromUser("Which space do you want to reserve?"));
 				VenueSpace selectedVenueSpaceName = venueSpaceDAO.getVenueSpacebyID( selectedSpaceID);
-				String finalselectedVenueSpace = selectedVenueSpaceName.toString();
+				String finalselectedVenueSpace = selectedVenueSpaceName.getName();
 						
 				
-				handleCreateReservation(numOfAttendees, startDate, endDate, selectedSpaceID, finalselectedVenueName,finalselectedVenueSpace );
+				handleCreateReservation(selectedVenueSpaceName, numOfAttendees, startDate, endDate, selectedSpaceID, finalselectedVenueName,finalselectedVenueSpace, lengthOfStay);
 			}
 		}
 		
 		
 	}
 
-	private void handleCreateReservation(int numOfAttendees, LocalDate startDate, LocalDate endDate, long spaceID,  String finalselectedVenueName, String finalselectedVenueSpace ) {
+	private void handleCreateReservation(VenueSpace venueSpace, int numOfAttendees, LocalDate startDate, LocalDate endDate, long spaceID,  String finalselectedVenueName, String finalselectedVenueSpace, long lengthOfStay ) {
 		String reservationName = ui.getInputFromUser("Who is this reservation for?");
 		Reservation reservation = new Reservation();
 		Venue venue = new Venue();
-		VenueSpace venueSpace = new VenueSpace();
-		venueSpace.setName(finalselectedVenueSpace);
+		//VenueSpace venueSpace = new VenueSpace();
+	//	venueSpace.setName(finalselectedVenueSpace);
 		venue.setName(finalselectedVenueName );
-	
+	//	venueSpace.getDaily_rate();
+		double totalCost = venueSpace.getDaily_rate() * lengthOfStay;
 		reservation.setSpaceID(spaceID);
 		reservation.setName(reservationName);
 		reservation.setStartDate(startDate);
 		reservation.setEndDate(endDate);
 		reservation.setNumOfAttendees(numOfAttendees);
 		reservation = reservationDAO.createReservation(reservation);
-		ui.printConfirmationMessage(reservation, venue, venueSpace);
+		ui.printConfirmationMessage(reservation, venue, venueSpace, totalCost);
 		
 	}
 

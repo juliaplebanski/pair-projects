@@ -146,6 +146,13 @@ public class UI {
 			}
 		}
 	}
+	public void printReservationByID(Reservation reservation) {
+		System.out.println("Name: " + reservation.getName());
+		System.out.println("Start Date: " + reservation.getStartDate());
+		System.out.println("End Date: " + reservation.getEndDate());
+	}
+	
+	
 	/**This method prints out a message to the console and also retrieves input from the user.*/
 	public String getInputFromUser(String message) { 
 		String input = "";
@@ -178,7 +185,7 @@ public class UI {
 	}
 
 	//method to print out the confirmation message when the reservation is complete
-	public void printConfirmationMessage(Reservation reservation, Venue venue, VenueSpace venueSpace) {
+	public void printConfirmationMessage(Reservation reservation, Venue venue, VenueSpace venueSpace, double totalCost) {
 		out.println("Thanks for submitting your reservation! The details for your event are listed below:");
 		out.println("Confirmation #: " + reservation.getReservationID());
 		out.println("Venue: " + venue.getName());
@@ -187,7 +194,8 @@ public class UI {
 		out.println("Attendees: " + reservation.getNumOfAttendees());
 		out.println("Arrival Date: " + reservation.getStartDate());
 		out.println("Depart Date: " + reservation.getEndDate());
-		out.println("Total Cost: " + (venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
+		out.println("Total Cost: " + totalCost);
+		//(venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
 	}
 	
 	//prints exit message and exits the program

@@ -19,17 +19,16 @@ public class JDBCVenueDAO implements VenueDAO {
 	public JDBCVenueDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-	
-	
-	//includes query that is used to get a list of all of the venues ordered alphabetically from the database
-	
+
+	// includes query that is used to get a list of all of the venues ordered
+	// alphabetically from the database
+
 	public List<Venue> getAllVenues() {
 		List<Venue> venueList = new ArrayList<Venue>();
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, city.id AS city_id, (category.name) AS categories FROM venue\n" + 
-				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
-				"JOIN category ON category_venue.category_id = category.id\n" + 
-				"JOIN city ON venue.city_id = city.id\n" + 
-				"ORDER BY name";
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, city.id AS city_id, (category.name) AS categories FROM venue\n"
+				+ "JOIN category_venue ON category_venue.venue_id = venue.id\n"
+				+ "JOIN category ON category_venue.category_id = category.id\n"
+				+ "JOIN city ON venue.city_id = city.id\n" + "ORDER BY name";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL);
 		while (results.next()) {
 			Venue venue = mapRowToVenue(results);
@@ -39,28 +38,19 @@ public class JDBCVenueDAO implements VenueDAO {
 		return venueList;
 	}
 
-	// need this method here to check if categories are null. this is why we keep getting the java.lang.NullPointerException
-	//i reached out in slack and Byron helped me with this a bit tonight but I was not able to get it to work. I think this is more on the right track though to get rid of the error we keep getting
-	public void checkIfCategoryIsNull(String string) {
-		if (venue.getCategory() == null) {
-			venue.setCategory("");
-			if (venue.getCategory() != null) {
-				venue.setCategory("categories");
-			}
-		}
-	}
-
-	//includes query that is used to get the venue details from the database
 	
+	
+
+	// includes query that is used to get the venue details from the database
+
 	public List<Venue> getVenueDetails(long venueID) {
 		List<Venue> venueDetails = new ArrayList<Venue>();
-		//checkIfCategoryIsNull("categories"); // need to call the method from above to check if the categories are null
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n" + 
-				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
-				"JOIN category ON category_venue.category_id = category.id\n" + 
-				"JOIN city ON venue.city_id = city.id\n" + 
-				"WHERE venue.id = ?";
-		// how to print multiple categories a venue has on the same line instead of two separate lines
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n"
+				+ "JOIN category_venue ON category_venue.venue_id = venue.id\n"
+				+ "JOIN category ON category_venue.category_id = category.id\n"
+				+ "JOIN city ON venue.city_id = city.id\n" + "WHERE venue.id = ?";
+		// how to print multiple categories a venue has on the same line instead of two
+		// separate lines
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, venueID);
 		while (results.next()) {
 			Venue venue = mapRowToVenue(results);
@@ -68,10 +58,11 @@ public class JDBCVenueDAO implements VenueDAO {
 		}
 		return venueDetails;
 	}
-	//used to map the results row to properties of the Venue class
+
+	// used to map the results row to properties of the Venue class
 	private Venue mapRowToVenue(SqlRowSet results) {
 		Venue venue = new Venue();
-		venue.setCategory(results.getString("categories")); 
+		venue.setCategory(results.getString("categories"));
 		venue.setDescription(results.getString("description"));
 		venue.setVenueID((long) results.getInt("id"));
 		venue.setCityID(results.getLong("city_id"));
@@ -88,31 +79,20 @@ public class JDBCVenueDAO implements VenueDAO {
 
 	}
 
-
 	@Override
 	public Venue getVenueNameByID(Long selectedVenueID) {
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n" + 
-				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
-				"JOIN category ON category_venue.category_id = category.id\n" + 
-				"JOIN city ON venue.city_id = city.id\n" + 
-				"WHERE venue.id = ?";
-				
+		Venue venue = new Venue();
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS city_id, (category.name) AS categories FROM venue\n"
+				+ "JOIN category_venue ON category_venue.venue_id = venue.id\n"
+				+ "JOIN category ON category_venue.category_id = category.id\n"
+				+ "JOIN city ON venue.city_id = city.id\n" + "WHERE venue.id = ?";
+
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, selectedVenueID);
-		if (results.next()){
-			Venue venue = new Venue();
-			venue = mapRowToVenue(results);
-		}
-		
-	
-		
+		results.next();
+		venue = mapRowToVenue(results);
+
 		return venue;
-			
-			
-			
-		
-			
+
 	}
 
-
-	
 }
