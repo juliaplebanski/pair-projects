@@ -31,6 +31,7 @@ public class ExcelsiorCLI {
 	
 	/**Please use format when commenting on top of a method.*/
 	//Please use this format when commenting within a method.
+	//All that is left: add reservation, search for reservation and print out reservation confirmation.
 
 	
 	private UI ui;
@@ -60,7 +61,7 @@ public class ExcelsiorCLI {
 	public void run() {
 		boolean running = true;
 		while (running) {
-			//prints the main menu, Main Menu
+			//prints the main menu
 			ui.printMainMenu();
 			
 			ui.printHeader("What would you like to do?");
