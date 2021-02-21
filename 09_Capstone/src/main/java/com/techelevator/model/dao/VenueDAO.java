@@ -5,7 +5,6 @@ import java.util.List;
 import com.techelevator.model.domain.Venue;
 
 public interface VenueDAO {
-	
 	List<Venue>getAllVenues();
-    List<Venue> getVenueDetails();
+    List<Venue> getVenueDetails(long venue_id);
 }

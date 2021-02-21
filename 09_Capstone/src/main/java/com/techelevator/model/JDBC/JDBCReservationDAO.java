@@ -36,7 +36,7 @@ import com.techelevator.model.domain.VenueSpace;
 		public List<VenueSpace> getAvaliableVenueSpacesByDate(long id, LocalDate startDate, LocalDate endDate) {
 			List<VenueSpace> venueSpace = new ArrayList<>();
 			String selectSQL = "SELECT venue_id, space.id, space.open_from, space.open_to, space.name, max_occupancy, is_accessible, CAST(space.daily_rate AS decimal) "
-					+ "FROM space JOIN venue on space.venue_id = venue.id where space.id = ? and space.id "
+					+ "FROM space JOIN venue on space.venue_id = venue.id where venue.id = ? and space.id "
 					+ "not in(SELECT space.id FROM reservation WHERE (?, ?) overlaps (start_date, end_date) group by space.id) LIMIT 5";
 			SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, id, startDate, endDate.plusDays(1));
 

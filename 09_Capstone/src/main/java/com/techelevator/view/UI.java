@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,11 +26,28 @@ public class UI {
 		this.in = new Scanner(input);
 
 	}
+	public void printMainMenu() {
+		out.println("***************************************************************");
+		out.println("Welcome to Excelsior Venues ");
+
+		out.println("****************************************************************\n");
+	}	
+
 	//used for each header that prints out to our console
 	public void printHeader(String headerInformation) {
-		System.out.println(headerInformation);
+		out.println(headerInformation);
 
 	}
+	public void printReservationHeader() {
+		System.out.println("\n*********** The following spaces are available based on your needs ******************************\n");
+		System.out.println("Space ID| name                  | Max Occup    |is_Accessible|    Daily_Rate($)");
+		System.out.println("\n------------------------------------------------------------------------------\n");
+		
+	}
+	public void printNoSpace() {
+		System.out.println("Unvaliable spaces for that date range. Please try again.");
+	}	
+
 
 	public Object getChoiceFromOptions(Object[] options) {
 		Object choice = null;
@@ -69,16 +89,44 @@ public class UI {
 	//used when invalid value is put in by user
 	public void handleError() {
 
-		out.println("\n** option is invalid ***\n");
+		System.out.println("\n** option is invalid ***\n");
+
+	}
+	public void invalidDateError() {
+
+		System.out.println("Please select a different date range***\n");
 
 	}
 
 	//prints out a list of all venues with their respective place in the array+1
-	public void selectListOfVenues(List<Venue> venueList) {
+	public void printVenueList(List<Venue> venueList) {
 
 		if (venueList.size() > 0) {
 			for (int i = 0; i < venueList.size(); i++) {
 				System.out.println((i + 1) + ") " + venueList.get(i).getName());
+			}
+		} else {
+			System.out.println("\n*** No results ***");
+
+		}
+	}
+	public void printSpaceList(List<VenueSpace> spaceList) {
+
+		if (spaceList.size() > 0) {
+			for (int i = 0; i < spaceList.size(); i++) {
+				System.out.println((i + 1) + ") " + spaceList.get(i).getName());
+			}
+		} else {
+			System.out.println("\n*** No results ***");
+
+		}
+	}
+	public void printListOfAvaliableSpaces(List<VenueSpace> listAvaliableSpaces) {
+
+		if (listAvaliableSpaces.size() > 0) {
+			
+			for (int i = 0; i < listAvaliableSpaces.size(); i++) {
+				System.out.println(listAvaliableSpaces.get(i).getSpaceID() + "| " + listAvaliableSpaces.get(i).getName() + "  |  "  + listAvaliableSpaces.get(i).getMaxOccupancy() + " |  " + listAvaliableSpaces.get(i).isAccessible() +  "   | " +  listAvaliableSpaces.get(i).getDaily_rate());
 			}
 		} else {
 			System.out.println("\n*** No results ***");
@@ -97,30 +145,49 @@ public class UI {
 			}
 		}
 	}
+	public String getInputFromUser(String message) { 
+		String input = "";
+		while (input.isEmpty()) {
+		
+			System.out.print(message + " >>> ");
+			input = in.nextLine();
+		}
+		return input;
+	}
+	public LocalDate getDateFromUser(String input) {
+	
+		LocalDate startDate = null;
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-	//prints out the list of spaces inside a particular venue that was selected
-	public void listVenueSpaces(List<VenueSpace> venueSpaces) {
-		if (venueSpaces.size() > 0) {
-			for (int i = 0; i < venueSpaces.size(); i++) {
-				// System.out.println("Name: " venueSpaces.get(i).getName()); in getName()
-				// method, should be returning the venue name not the venue space name
-				// System.out.println(number, name, open, close, daily rate, max occupancy) this
-				// should print out in columbus
+		while (startDate == null) {
+		
+			try {
+			
+				String Choice = getInputFromUser(input);
+				startDate = LocalDate.parse(Choice, dateFormat);
+			}
+			catch (DateTimeParseException e)
+			{
+				System.out.println("Invalid date format.");
 			}
 		}
+
+		return startDate;
 	}
+
 	//method to print out the confirmation message when the reservation is complete
 	public void confirmationMessage() {
-		System.out.println("Thanks for submitting your reservation! The details for your event are listed below:");
-		System.out.println("Confirmation #: " + reservation.getReservationID());
-		System.out.println("Venue: " + venue.getName());
-		System.out.println("Space: " + venueSpace.getName());
-		System.out.println("Reservered for: " + reservation.getName());
-		System.out.println("Attendees: " + reservation.getNumOfAttendees());
-		System.out.println("Arrival Date: " + reservation.getStartDate());
-		System.out.println("Depart Date: " + reservation.getEndDate());
-		System.out.println("Total Cost: " + (venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
+		out.println("Thanks for submitting your reservation! The details for your event are listed below:");
+		out.println("Confirmation #: " + reservation.getReservationID());
+		out.println("Venue: " + venue.getName());
+		out.println("Space: " + venueSpace.getName());
+		out.println("Reservered for: " + reservation.getName());
+		out.println("Attendees: " + reservation.getNumOfAttendees());
+		out.println("Arrival Date: " + reservation.getStartDate());
+		out.println("Depart Date: " + reservation.getEndDate());
+		out.println("Total Cost: " + (venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
 	}
+	
 	//prints exit message and exits the program
 	public void exitMessage() {
 		System.out.println("Have A Great Day!");

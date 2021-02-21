@@ -22,10 +22,14 @@ public class JDBCVenueDAO implements VenueDAO {
 	
 	
 	//includes query that is used to get a list of all of the venues ordered alphabetically from the database
-	@Override
+	
 	public List<Venue> getAllVenues() {
 		List<Venue> venueList = new ArrayList<Venue>();
-		String selectSQL = "SELECT * FROM venue ORDER BY name";
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, city.id AS cityID, (category.name) AS categories FROM venue\n" + 
+				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
+				"JOIN category ON category_venue.category_id = category.id\n" + 
+				"JOIN city ON venue.city_id = city.id\n" + 
+				"ORDER BY name";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL);
 		while (results.next()) {
 			Venue venue = mapRowToVenue(results);
@@ -47,14 +51,15 @@ public class JDBCVenueDAO implements VenueDAO {
 	}
 
 	//includes query that is used to get the venue details from the database
+	
 	public List<Venue> getVenueDetails(long venueID) {
-
 		List<Venue> venueDetails = new ArrayList<Venue>();
 		//checkIfCategoryIsNull("categories"); // need to call the method from above to check if the categories are null
-		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, (category.name) AS categories, venue.description FROM venue\n"
-				+ "LEFT category_venue ON category_venue.venue_id = venue.id\n"
-				+ "JOIN category ON category_venue.category_id = category.id\n"
-				+ "JOIN city ON venue.city_id = city.id\n" + "WHERE venue.id = ?";
+		String selectSQL = "SELECT venue.id, venue.name, (city.name, city.state_abbreviation) AS location_id, venue.description, venue.city_id AS cityID, (category.name) AS categories FROM venue\n" + 
+				"JOIN category_venue ON category_venue.venue_id = venue.id\n" + 
+				"JOIN category ON category_venue.category_id = category.id\n" + 
+				"JOIN city ON venue.city_id = city.id\n" + 
+				"WHERE venue.id = ?";
 		// how to print multiple categories a venue has on the same line instead of two separate lines
 		SqlRowSet results = jdbcTemplate.queryForRowSet(selectSQL, venueID);
 		while (results.next()) {
@@ -66,12 +71,11 @@ public class JDBCVenueDAO implements VenueDAO {
 	//used to map the results row to properties of the Venue class
 	private Venue mapRowToVenue(SqlRowSet results) {
 		Venue venue = new Venue();
-		//venue.setCategory(checkIfCategoryIsnull(results.getString("categories")); // need to call method made from above here
+		venue.setCategory(results.getString("categories")); 
 		venue.setDescription(results.getString("description"));
 		venue.setVenueID((long) results.getInt("id"));
-		// venue.setCityID(results.getLong("city_id"));
-		// venue.setLocation(results.getString("location_id")); // pulls in city name
-		// and state of venue
+		venue.setCityID(results.getLong("cityID"));
+		venue.setLocation(results.getString("location_id"));// and state of venue
 		venue.setName(results.getString("name"));
 
 		return venue;
@@ -84,10 +88,6 @@ public class JDBCVenueDAO implements VenueDAO {
 
 	}
 
-	@Override
-	public List<Venue> getVenueDetails() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	
 }
