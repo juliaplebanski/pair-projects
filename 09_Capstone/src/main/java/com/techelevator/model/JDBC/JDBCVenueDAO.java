@@ -20,8 +20,7 @@ public class JDBCVenueDAO implements VenueDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	// includes query that is used to get a list of all of the venues ordered
-	// alphabetically from the database
+	/** includes query that is used to get a list of all of the venues ordered alphabetically from the database */
 
 	public List<Venue> getAllVenues() {
 		List<Venue> venueList = new ArrayList<Venue>();
@@ -41,7 +40,7 @@ public class JDBCVenueDAO implements VenueDAO {
 	
 	
 
-	// includes query that is used to get the venue details from the database
+	/** includes query that is used to get the venue details from the database */
 
 	public List<Venue> getVenueDetails(long venueID) {
 		List<Venue> venueDetails = new ArrayList<Venue>();
@@ -59,7 +58,7 @@ public class JDBCVenueDAO implements VenueDAO {
 		return venueDetails;
 	}
 
-	// used to map the results row to properties of the Venue class
+	/** used to map the results row to properties of the Venue class */
 	private Venue mapRowToVenue(SqlRowSet results) {
 		Venue venue = new Venue();
 		venue.setCategory(results.getString("categories"));
@@ -72,13 +71,15 @@ public class JDBCVenueDAO implements VenueDAO {
 		return venue;
 	}
 
-	public void save(Venue venue) { // may need to come back to this method
+	/** used to save a venue */
+	public void save(Venue venue) { 
 
 		String insertSql = "INSERT INTO venue(id, name, city_id, description) VALUES(?, ?, ?, ?, ?)";
 		jdbcTemplate.update(insertSql, venue.getVenueID(), venue.getName(), venue.getCityID(), venue.getDescription());
 
 	}
 
+	/** used to get a venue name by the ID*/
 	@Override
 	public Venue getVenueNameByID(Long selectedVenueID) {
 		Venue venue = new Venue();

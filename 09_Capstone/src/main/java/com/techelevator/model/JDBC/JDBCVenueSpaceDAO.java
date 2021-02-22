@@ -19,7 +19,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 		
 	}
 
-	//used to return a list of all venues spaces inside of a particular venue
+	/**used to return a list of all venues spaces inside of a particular venue */
 	@Override
 	public List<VenueSpace> getAllSpaces() {
 		// TODO Auto-generated method stub
@@ -32,7 +32,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 		}
 		return listOfSpaces;
 	}
-	//used to search for a venue space by spaceID
+	/**used to search for a venue space by spaceID */
 	@Override
 	public VenueSpace getVenueSpacebyID(long ID) {
 		VenueSpace venueSpace = null;
@@ -45,7 +45,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 	}
 	
 		
-	//used to map the results row to properties of the venueSpace class
+	/**used to map the results row to properties of the venueSpace class */
 	private VenueSpace mapRowToVenueSpace(SqlRowSet results) {
 		VenueSpace venueSpace = new VenueSpace();
 		venueSpace.setSpaceID(results.getLong("id"));

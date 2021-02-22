@@ -27,22 +27,25 @@ public class UI {
 		this.in = new Scanner(input);
 
 	}
-	public void printMainMenu() {
-		out.println("***************************************************************");
-		out.println("Welcome to Excelsior Venues ");
-
-		out.println("****************************************************************\n");
-	}	
-
-	//used for each header that prints out to our console
+	
+	/**used for each header that prints out to our console*/
 	public void printHeader(String headerInformation) {
 		System.out.println(headerInformation);
 
 	}
+	/** prints the main menu*/
+	public void printMainMenu() {
+		out.println("***************************************************************");
+		out.println("Welcome to Excelsior Venues ");
+
+		out.println("****************************************************************");
+	}	
+
+
 	public void printReservationHeader() {
-		System.out.println("\n*********** The following spaces are available based on your needs ******************************\n");
-		System.out.println("Space ID| name                  | Max Occup    |is_Accessible|    Daily_Rate($)");
-		System.out.println("\n------------------------------------------------------------------------------\n");
+		System.out.println("*********** The following spaces are available based on your needs ******************************");
+		System.out.println(String.format("%-50s", "Space ID | Name | Max Occup | Accessible | Daily Rate($)"));
+		System.out.println("        ------------------------------------------------------------------------------");
 		
 	}
 	public void printNoSpace() {
@@ -83,11 +86,11 @@ public class UI {
 			int optionNum = i + 1;
 			out.println(optionNum + ") " + options[i]);
 		}
-		out.print("\n Please choose an option >>> ");
+		out.print("Please choose an option >>> ");
 		out.flush();
 	}
 	
-	//used when invalid value is put in by user
+	/*used when invalid value is put in by user*/
 	public void handleError() {
 
 		System.out.println("\n** option is invalid ***\n");
@@ -99,7 +102,7 @@ public class UI {
 
 	}
 
-	//prints out a list of all venues with their respective place in the array+1
+	/**prints out a list of all venues with their respective place in the array+1 */
 	public void printVenueList(List<Venue> venueList) {
 
 		if (venueList.size() > 0) {
@@ -116,6 +119,7 @@ public class UI {
 		if (spaceList.size() > 0) {
 			for (int i = 0; i < spaceList.size(); i++) {
 				System.out.println((i + 1) + ") " + spaceList.get(i).getName());
+			//spaceList.get(i).getName());
 			}
 		} else {
 			System.out.println("\n*** No results ***");
@@ -135,7 +139,7 @@ public class UI {
 		}
 	}
 
-	//prints out venue details
+	/**prints out venue details*/
 	public void printVenueDetails(List<Venue> venueDetails) {
 		if (venueDetails.size() > 0) {
 			for (int i = 0; i < venueDetails.size(); i++) {
@@ -146,6 +150,8 @@ public class UI {
 			}
 		}
 	}
+	
+	/*used to print out the reservation information when reservation in searched by id*/
 	public void printReservationByID(Reservation reservation) {
 		System.out.println("Name: " + reservation.getName());
 		System.out.println("Start Date: " + reservation.getStartDate());
@@ -163,6 +169,8 @@ public class UI {
 		}
 		return input;
 	}
+	
+	/**used to get the format of the date the user inputs*/
 	public LocalDate getDateFromUser(String input) {
 	
 		LocalDate startDate = null;
@@ -184,7 +192,7 @@ public class UI {
 		return startDate;
 	}
 
-	//method to print out the confirmation message when the reservation is complete
+	/**method to print out the confirmation message when the reservation is complete*/
 	public void printConfirmationMessage(Reservation reservation, Venue venue, VenueSpace venueSpace, double totalCost) {
 		out.println("Thanks for submitting your reservation! The details for your event are listed below:");
 		out.println("Confirmation #: " + reservation.getReservationID());
@@ -198,7 +206,7 @@ public class UI {
 		//(venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
 	}
 	
-	//prints exit message and exits the program
+	/**prints exit message and exits the program*/
 	public void exitMessage() {
 		System.out.println("Have A Great Day!");
 	}
