@@ -32,11 +32,6 @@ public class ExcelsiorCLI {
 	private static final String[] SECOND_SUB_MENU_OPTION_ARRAY = new String[] { SECOND_SUB_MENU_OPTION_ONE,
 			SECOND_SUB_MENU_OPTION_TWO };
 
-	/** Please use format when commenting on top of a method. */
-	// Please use this format when commenting within a method.
-	// All that is left: add reservation, search for reservation, print out
-	// reservation confirmation and format.
-
 	private UI ui;
 	private VenueDAO venueDAO;
 	private ReservationDAO reservationDAO;
@@ -59,7 +54,6 @@ public class ExcelsiorCLI {
 
 	}
 
-// Reminder: No System.out.printlns in this class
 
 	public void run() {
 		boolean running = true;
@@ -68,7 +62,7 @@ public class ExcelsiorCLI {
 			//first print the main menu
 			ui.printMainMenu();
 
-			//then, print this question to the user; not sure why this is printing above the main menu?
+			//then, print this question to the user; 
 			ui.printHeader("What would you like to do?");
 			String Choice = (String) ui.getChoiceFromOptions(MAIN_MENU_OPTION_ARRAY);
 
@@ -85,7 +79,7 @@ public class ExcelsiorCLI {
 
 	}
 
-	/** This method returns a list of venues. */
+	/** This method returns a list of Venues.*/
 	public void handleListOfVenues() {
 		List<Venue> venueList = venueDAO.getAllVenues();
 		ui.printVenueList(venueList);
@@ -96,28 +90,25 @@ public class ExcelsiorCLI {
 		Venue venue = (Venue) ui.getChoiceFromUserInput(venueArray);
 		handleVenueDetails(venue.getVenueID());
 		ui.printHeader("What would you like to do next");
-		subMenu();
-
-	}
-
-	/** This is the sub menu method. */
-	private void subMenu() {
-		boolean isRunning = true;
-		while (isRunning) {
-			String Choice = (String) ui.getChoiceFromOptions(SUB_MENU_OPTION_ARRAY);
-			if (Choice.equals(SUB_MENU_OPTION_ONE)) {
-				handleSpaces();
-			} else if (Choice.equals(SUB_MENU_OPTION_TWO)) {
+		
+		String Choice = (String) ui.getChoiceFromOptions(SUB_MENU_OPTION_ARRAY);
+		if (Choice.equals(SUB_MENU_OPTION_ONE)) {
+				handleSpaces(venue.getVenueID());
+		} else if (Choice.equals(SUB_MENU_OPTION_TWO)) {
 				Long ChoiceForSubMenu2 = Long.parseLong(ui.getInputFromUser("Provide the reservation ID"));
 				handleSearchReservation(ChoiceForSubMenu2);
 
-			} else {
-				isRunning = false;
-			}
-
+		} else if(Choice.equals(SUB_MENU_OPTION_THREE)) {
+				ui.returnsUserToPreviousMenu();
+				
+		}
+		else {
+				ui.handleError();
 		}
 
-	}
+	}		
+
+	
 	
 	/**This method is used to search for a reservation by id*/
 	private Reservation handleSearchReservation(long reservationID) {
@@ -127,8 +118,8 @@ public class ExcelsiorCLI {
 	}
 
 	/** This method handles Venue spaces. */
-	private void handleSpaces() {
-		List<VenueSpace> listOfVenueSpaces = venueSpaceDAO.getAllSpaces();
+	private void handleSpaces(long ID) {
+		List<VenueSpace> listOfVenueSpaces = venueSpaceDAO.getAllSpacesForVenue(ID);
 		ui.printSpaceList(listOfVenueSpaces);
 		ui.printHeader("What would you like to do next");
 		reservationSubmenu();
@@ -146,7 +137,7 @@ public class ExcelsiorCLI {
 
 	/** This method retrieves a list of availability based on the user's need. */
 	private void createNewReservation() {
-		Long selectedVenueID = Long.parseLong(ui.getInputFromUser("Please provide the venue space ID of the venue space listed to the left "));
+		Long selectedVenueID = Long.parseLong(ui.getInputFromUser("Please provide the venue ID of the spaces listed to the above. "));
 		Venue selectedVenueName = venueDAO.getVenueNameByID(selectedVenueID);
 		String finalselectedVenueName = selectedVenueName.getName();
 
@@ -193,11 +184,12 @@ public class ExcelsiorCLI {
 		reservation.setEndDate(endDate);
 		reservation.setNumOfAttendees(numOfAttendees);
 		reservation = reservationDAO.createReservation(reservation);
+		ui.printHeader("                                                     ");
 		ui.printConfirmationMessage(reservation, venue, venueSpace, totalCost);
 
 	}
 
-	/** This method returns a list of venue details. */
+	/** This method returns a list of Venue details. */
 	public List<Venue> handleVenueDetails(long venue_id) {
 		List<Venue> venueDetails = venueDAO.getVenueDetails(venue_id);
 		ui.printVenueDetails(venueDetails);

@@ -1,15 +1,20 @@
 package com.techelevator.view;
 
+
 import java.io.InputStream;
 
-import java.io.OutputStream;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
+
 
 import com.techelevator.model.domain.Reservation;
 import com.techelevator.model.domain.Venue;
@@ -28,31 +33,39 @@ public class UI {
 
 	}
 	
-	/**used for each header that prints out to our console*/
+	/**Used for each header that prints out to our console*/
 	public void printHeader(String headerInformation) {
 		System.out.println(headerInformation);
 
 	}
-	/** prints the main menu*/
-	public void printMainMenu() {
-		out.println("***************************************************************");
-		out.println("Welcome to Excelsior Venues ");
+	/**Returns user to the previous menu.*/
+	public void returnsUserToPreviousMenu() {
+		System.out.println("returning to previous menu....");
 
-		out.println("****************************************************************");
+	}
+	
+	/**Prints the main menu.*/
+	public void printMainMenu() {
+		System.out.println("***************************************************************");
+		System.out.println("Welcome to Excelsior Venues ");
+
+		System.out.println("****************************************************************");
 	}	
 
-
+	/**Prints the reservation header.*/
 	public void printReservationHeader() {
 		System.out.println("*********** The following spaces are available based on your needs ******************************");
 		System.out.println(String.format("%-50s", "Space ID | Name | Max Occup | Accessible | Daily Rate($)"));
-		System.out.println("        ------------------------------------------------------------------------------");
+		System.out.println("------------------------------------------------------------------------------------");
 		
 	}
+	
+	/**This method informs the user that there is no available space.*/
 	public void printNoSpace() {
 		System.out.println("Unvaliable spaces for that date range. Please try again.");
 	}	
 
-
+	/**This method gets user's choice from from available options.*/
 	public Object getChoiceFromOptions(Object[] options) {
 		Object choice = null;
 		while (choice == null) {
@@ -61,7 +74,8 @@ public class UI {
 		}
 		return choice;
 	}
-
+	
+	/**This method gets Choice from user's input.*/
 	public Object getChoiceFromUserInput(Object[] options) {
 		Object choice = null;
 		String userInput = in.nextLine();
@@ -79,18 +93,19 @@ public class UI {
 
 		return choice;
 	}
-
+	
+	/**This method displays menu options.*/
 	private void displayMenuOptions(Object[] options) {
 		out.println();
 		for (int i = 0; i < options.length; i++) {
 			int optionNum = i + 1;
 			out.println(optionNum + ") " + options[i]);
 		}
-		out.print("Please choose an option >>> ");
+		out.print(">>>>>>>Please choose an option >>>>>>>>>> ");
 		out.flush();
 	}
 	
-	/*used when invalid value is put in by user*/
+	/**Used when invalid value is put in by user.*/
 	public void handleError() {
 
 		System.out.println("\n** option is invalid ***\n");
@@ -102,30 +117,39 @@ public class UI {
 
 	}
 
-	/**prints out a list of all venues with their respective place in the array+1 */
+	/**Prints out a list of all Venues with their respective place in the array+1 */
 	public void printVenueList(List<Venue> venueList) {
+		
+		 //List<Venue> listWithoutDuplicates = venueList.stream().distinct().collect(Collectors.toList());
+         
 
-		if (venueList.size() > 0) {
-			for (int i = 0; i < venueList.size(); i++) {
-				System.out.println((i + 1) + ") " + venueList.get(i).getName());
+		  if(venueList .size() > 0) {
+			 
+	
+			for (int i = 0; i < venueList .size(); i++) {
+				System.out.println((i + 1) + ") " + venueList .get(i).getName() + " " + venueList .get(i).getCategory());
+				
 			}
 		} else {
 			System.out.println("\n*** No results ***");
-
+		 
 		}
 	}
+	
+	/**Prints out a list of all spaces*/
 	public void printSpaceList(List<VenueSpace> spaceList) {
 
 		if (spaceList.size() > 0) {
 			for (int i = 0; i < spaceList.size(); i++) {
 				System.out.println((i + 1) + ") " + spaceList.get(i).getName());
-			//spaceList.get(i).getName());
 			}
 		} else {
 			System.out.println("\n*** No results ***");
 
 		}
 	}
+	
+	/**Prints out a list of available spaces.*/
 	public void printListOfAvaliableSpaces(List<VenueSpace> listAvaliableSpaces) {
 
 		if (listAvaliableSpaces.size() > 0) {
@@ -139,19 +163,22 @@ public class UI {
 		}
 	}
 
-	/**prints out venue details*/
+	/**Prints out Venue details*/
 	public void printVenueDetails(List<Venue> venueDetails) {
-		if (venueDetails.size() > 0) {
-			for (int i = 0; i < venueDetails.size(); i++) {
-				System.out.println("Name: " + venueDetails.get(i).getName());
-				System.out.println("Location: " + venueDetails.get(i).getLocation());
-				System.out.println("Categories: " + venueDetails.get(i).getCategory());
-				System.out.println("Details: " + venueDetails.get(i).getDescription());
+		ArrayList<Venue> finalVenueDetailsList = new ArrayList<Venue>(new LinkedHashSet<Venue>(venueDetails));
+	
+
+		if (finalVenueDetailsList.size() > 0) {
+			for (int i = 0; i < finalVenueDetailsList.size(); i++) {
+				System.out.println("Name: " + finalVenueDetailsList.get(i).getName());
+				System.out.println("Location: " + finalVenueDetailsList.get(i).getLocation());
+				System.out.println("Categories: " + finalVenueDetailsList.get(i).getCategory());
+				System.out.println("Details: " + finalVenueDetailsList.get(i).getDescription());
 			}
 		}
 	}
 	
-	/*used to print out the reservation information when reservation in searched by id*/
+	/**Used to print out the reservation information when reservation in searched by id*/
 	public void printReservationByID(Reservation reservation) {
 		System.out.println("Name: " + reservation.getName());
 		System.out.println("Start Date: " + reservation.getStartDate());
@@ -170,7 +197,7 @@ public class UI {
 		return input;
 	}
 	
-	/**used to get the format of the date the user inputs*/
+	/**Used to get the format of the date the user inputs*/
 	public LocalDate getDateFromUser(String input) {
 	
 		LocalDate startDate = null;
@@ -192,7 +219,7 @@ public class UI {
 		return startDate;
 	}
 
-	/**method to print out the confirmation message when the reservation is complete*/
+	/**Prints out the confirmation message when the reservation is complete*/
 	public void printConfirmationMessage(Reservation reservation, Venue venue, VenueSpace venueSpace, double totalCost) {
 		out.println("Thanks for submitting your reservation! The details for your event are listed below:");
 		out.println("Confirmation #: " + reservation.getReservationID());
@@ -206,7 +233,7 @@ public class UI {
 		//(venueSpace.getDaily_rate() * reservation.getLengthOfStay()));
 	}
 	
-	/**prints exit message and exits the program*/
+	/**Prints exit message and exits the program*/
 	public void exitMessage() {
 		System.out.println("Have A Great Day!");
 	}

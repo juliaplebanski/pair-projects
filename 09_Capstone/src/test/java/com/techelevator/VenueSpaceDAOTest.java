@@ -27,7 +27,7 @@ public class VenueSpaceDAOTest extends DAOIntegrationTest {
 	
 	@Test
 	public void test_get_all_spaces() {
-		List<VenueSpace>venueSpaceList = dao.getAllSpaces();
+		List<VenueSpace>venueSpaceList = dao.getAllSpacesForVenue( TEST_VENUE_ID);
 		assertNotNull(venueSpaceList);
 		assertTrue(venueSpaceList.size() >= 1);
 	}

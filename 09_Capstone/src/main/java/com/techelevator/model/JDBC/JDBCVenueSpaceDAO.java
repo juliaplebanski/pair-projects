@@ -21,11 +21,11 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 
 	/**used to return a list of all venues spaces inside of a particular venue */
 	@Override
-	public List<VenueSpace> getAllSpaces() {
+	public List<VenueSpace> getAllSpacesForVenue(long ID) {
 		// TODO Auto-generated method stub
 		List<VenueSpace>listOfSpaces = new ArrayList<VenueSpace>();
-		String selectStatement = "SELECT venue_id,id, name, is_accessible, open_from, open_to, daily_rate::numeric::integer, max_occupancy FROM space";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(selectStatement);
+		String selectStatement = "SELECT venue_id,id, name, is_accessible, open_from, open_to, daily_rate::numeric::integer, max_occupancy FROM space WHERE venue_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(selectStatement, ID);
 		while(results.next()) {
 			VenueSpace venueSpace = mapRowToVenueSpace(results);
 			listOfSpaces.add(venueSpace);
